@@ -7,16 +7,15 @@ import urllib2
 import json
 import datetime
 
-def retrieve_all_listings():
+def retrieve_all_listings(date_from,region):
 
-	## api parameters
 	# file_format	= 'json'
 	adjacent_suburbs = 'false'	
 	# bathrooms_max = None	
 	# bathrooms_min = None	
 	# bedrooms_max = None	
 	# bedrooms_min = None	
-	date_from = '2011-01-01' # time.strftime("%Y-%m-%d", time.localtime())	
+	#date_from = '2011-01-01' # time.strftime("%Y-%m-%d", time.localtime())	
 	# district = '1'	
 	# latitude_max = None	
 	# latitude_min = None	
@@ -27,13 +26,18 @@ def retrieve_all_listings():
 	# price_max = None
 	# price_min = None	
 	# property_type = None
-	region = '1'	
+	# region = '1'	
 	# rows = '500'	
 	# search_string = 'million dollar views'	
 	# sort_order = 'PriceAsc'	
 	# suburb = None
 
-	# url = "https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=false&date_from=2011-01-01T00%3A00&photo_size=FullSize&region=1&rows=500&sort_order=PriceAsc HTTP/1.1"
+	# Location hierarchy is Region/Locality, District, Suburb (+ adjacent Suburbs)
+
+	# simple api request
+	# 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=false&date_from=2011-01-01T00%3A00&photo_size=FullSize&region=1&rows=500&sort_order=PriceAsc HTTP/1.1'
+	# more complex request 
+	# 'https://api.tmsandbox.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=false&date_from=2011-01-01T00%3A00&district=1&latitude_max=12&latitude_min=13&longitude_max=14&longitude_min=15&page=1&photo_size=FullSize&property_type=House%2CSection%2CTownhouse%2CUnit&region=2&rows=500&search_string=searchstring&sort_order=PriceAsc&suburb=1 HTTP/1.1'
 
 	url = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
 
@@ -64,17 +68,13 @@ def retrieve_all_listings():
 	rs = urllib2.urlopen(req.to_url())
 	result_string = rs.read()
 	
-	# save result_string to disk here for backup?
 	propertyPages = []
 	propertyPages.append(json.loads(result_string))
 
 	pages = propertyPages[0].get('TotalCount')/500
 
 	for j in range(0,pages):
-		#apiRequest = "https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=false&date_from=2011-01-01T00%3A00&page="
-		#apiRequest += str(j)
-		#apiRequest += "&photo_size=FullSize&region=1&rows=500&sort_order=PriceAsc HTTP/1.1"
-
+		#apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=false&date_from=2011-01-01T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=1&rows=500&sort_order=PriceAsc HTTP/1.1'
 		apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
 
 		req = oauth.Request(method="GET", url=apiRequest, parameters=params)
@@ -82,10 +82,9 @@ def retrieve_all_listings():
 		rs = urllib2.urlopen(req.to_url())
 		
 		result_string = rs.read()
-		# save result_string to disk here for backup?
 		propertyPages.append(json.loads(result_string))
 
-	print len(propertyPages)
+	print 'propertypages structure length is ' + str(len(propertyPages))
 	return propertyPages
 
 def retrieve_individual_listing(listingid):
