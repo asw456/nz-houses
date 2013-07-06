@@ -6,7 +6,7 @@ kdapikeys.txt
 # data
 db/
 json/
-
+data/
 
 *.py[cod]
 
