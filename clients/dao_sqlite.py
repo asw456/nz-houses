@@ -5,6 +5,25 @@ import re
 import dateutil.parser
 import datetime
 
+def create_table_residential_listings(dbPath):
+
+    conn = sqlite3.connect(dbPath)
+    with conn:
+        cur = conn.cursor()
+        cur.execute("DROP TABLE IF EXISTS residential_listings")
+        cur.execute("CREATE TABLE residential_listings (ListingId INTEGER,Title VARCHAR(100),Category VARCHAR(50),StartPrice REAL,StartDate INTEGER,EndDate INTEGER,IsFeatured INTEGER,HasGallery INTEGER,IsBold INTEGER,IsHighlighted INTEGER,AsAt INTEGER,CategoryPath VARCHAR(100),PictureHref VARCHAR(100),RegionId INTEGER,Region VARCHAR(50),SuburbId INTEGER,Suburb VARCHAR(100),ReserveState INTEGER,IsClassified INTEGER,Latitude REAL,Longitude REAL,Northing INTEGER,Easting INTEGER,Accuracy INTEGER,PriceDisplay VARCHAR(100),Address VARCHAR(100),District VARCHAR(100),AgencyReference VARCHAR(10),LandArea INTEGER,Bathrooms INTEGER,Bedrooms INTEGER,ListingGroup VARCHAR(100),Parking VARCHAR(100),PropertyType VARCHAR(50),PropertyId VARCHAR(50),DistrictId INTEGER,AgencyId INTEGER,AgencyName VARCHAR(255),AgencyPhoneNumber VARCHAR(20),AgencyWebsite VARCHAR(100),IsRealEstateAgnecy INTEGER,IsLicensedPropertyAgency INTEGER)")
+    
+def create_table_schools(dbPath):
+
+    conn = sqlite3.connect(dbPath)
+    with conn:
+        cur = conn.cursor()
+        cur.execute("DROP TABLE IF EXISTS schools")
+        cur.execute("CREATE TABLE schools (id INTEGER, name VARCHAR(255), decile INTEGER)")
+    
+    
+
+
 def insert_search_results(propertyPages, dbPath):
 
     columns = ['ListingId','Title','Category','StartPrice','StartDate','EndDate','IsFeatured','HasGallery','IsBold','IsHighlighted','AsAt','CategoryPath','PictureHref','RegionId','Region','SuburbId','Suburb','ReserveState','IsClassified','Latitude','Longitude','Northing','Easting','Accuracy','PriceDisplay','Address','District','AgencyReference','LandArea','Bathrooms','Bedrooms','ListingGroup','Parking','PropertyType','PropertyId','DistrictId','AgencyId','AgencyName','AgencyPhoneNumber','AgencyWebsite','IsRealEstateAgnecy','IsLicensedPropertyAgency']
@@ -88,8 +107,8 @@ def insert_search_results(propertyPages, dbPath):
     conn = sqlite3.connect(dbPath)
     with conn:
         cur = conn.cursor()
-        cur.execute("DROP TABLE IF EXISTS residential_listings")
-        cur.execute("CREATE TABLE residential_listings (ListingId INTEGER,Title VARCHAR(100),Category VARCHAR(50),StartPrice REAL,StartDate INTEGER,EndDate INTEGER,IsFeatured INTEGER,HasGallery INTEGER,IsBold INTEGER,IsHighlighted INTEGER,AsAt INTEGER,CategoryPath VARCHAR(100),PictureHref VARCHAR(100),RegionId INTEGER,Region VARCHAR(50),SuburbId INTEGER,Suburb VARCHAR(100),ReserveState INTEGER,IsClassified INTEGER,Latitude REAL,Longitude REAL,Northing INTEGER,Easting INTEGER,Accuracy INTEGER,PriceDisplay VARCHAR(100),Address VARCHAR(100),District VARCHAR(100),AgencyReference VARCHAR(10),LandArea INTEGER,Bathrooms INTEGER,Bedrooms INTEGER,ListingGroup VARCHAR(100),Parking VARCHAR(100),PropertyType VARCHAR(50),PropertyId VARCHAR(50),DistrictId INTEGER,AgencyId INTEGER,AgencyName VARCHAR(255),AgencyPhoneNumber VARCHAR(20),AgencyWebsite VARCHAR(100),IsRealEstateAgnecy INTEGER,IsLicensedPropertyAgency INTEGER)")
+        #cur.execute("DROP TABLE IF EXISTS residential_listings")
+        #cur.execute("CREATE TABLE residential_listings (ListingId INTEGER,Title VARCHAR(100),Category VARCHAR(50),StartPrice REAL,StartDate INTEGER,EndDate INTEGER,IsFeatured INTEGER,HasGallery INTEGER,IsBold INTEGER,IsHighlighted INTEGER,AsAt INTEGER,CategoryPath VARCHAR(100),PictureHref VARCHAR(100),RegionId INTEGER,Region VARCHAR(50),SuburbId INTEGER,Suburb VARCHAR(100),ReserveState INTEGER,IsClassified INTEGER,Latitude REAL,Longitude REAL,Northing INTEGER,Easting INTEGER,Accuracy INTEGER,PriceDisplay VARCHAR(100),Address VARCHAR(100),District VARCHAR(100),AgencyReference VARCHAR(10),LandArea INTEGER,Bathrooms INTEGER,Bedrooms INTEGER,ListingGroup VARCHAR(100),Parking VARCHAR(100),PropertyType VARCHAR(50),PropertyId VARCHAR(50),DistrictId INTEGER,AgencyId INTEGER,AgencyName VARCHAR(255),AgencyPhoneNumber VARCHAR(20),AgencyWebsite VARCHAR(100),IsRealEstateAgnecy INTEGER,IsLicensedPropertyAgency INTEGER)")
         #cur.execute("INSERT INTO Cars VALUES(1,'Audi',52642)")
 
         cur.executemany("INSERT INTO residential_listings VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", property_tuple_all)
