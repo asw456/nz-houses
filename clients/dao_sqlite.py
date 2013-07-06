@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import json
 import sqlite3
 import sys
@@ -9,8 +7,6 @@ import datetime
 
 def insert_search_results(propertyPages, dbPath):
 
-    #propertyPages = json.load(open('../json/propertyPages.json'))
-    
     columns = ['ListingId','Title','Category','StartPrice','StartDate','EndDate','IsFeatured','HasGallery','IsBold','IsHighlighted','AsAt','CategoryPath','PictureHref','RegionId','Region','SuburbId','Suburb','ReserveState','IsClassified','Latitude','Longitude','Northing','Easting','Accuracy','PriceDisplay','Address','District','AgencyReference','LandArea','Bathrooms','Bedrooms','ListingGroup','Parking','PropertyType','PropertyId','DistrictId','AgencyId','AgencyName','AgencyPhoneNumber','AgencyWebsite','IsRealEstateAgnecy','IsLicensedPropertyAgency']
 
     property_tuple_all = []
@@ -18,27 +14,27 @@ def insert_search_results(propertyPages, dbPath):
     for x in propertyPages:#[:1]:    
         print 'starting page'
         
-        for y in x['List']:#[:1]:    
+        for y in x['List']:#[:20]:    
             ListingId = y.get('ListingId') if y.get('ListingId') else -99
             Title = y.get('Title') if y.get('Title') else ''
             Category = y.get('Category') if y.get('Category') else ''
             StartPrice = y.get('StartPrice') if y.get('StartPrice') else -99
             
             if (y.get('StartDate')):
-                sdate = re.sub(r'\/Date\(([0-9]*)\)\/',r'\1',y.get('StartDate'))
-                #sd = datetime.datetime.fromtimestamp(int(ms)/1000.0)
+                sdate = re.sub(r'\/Date\(([0-9]*)\)\/',r'd\1',y.get('StartDate'))
+                #sdate = datetime.datetime.fromtimestamp(int(sdate)/1000.0)
             else:
                 sdate = -99
-            #StartDate = sdate 
-            StartDate = y.get('StartDate') if y.get('StartDate') else ''
+            StartDate = sdate 
+            #StartDate = y.get('StartDate') if y.get('StartDate') else ''
             
             if (y.get('EndDate')):
-                edate = re.sub(r'\/Date\(([0-9]*)\)\/',r'\1',y.get('EndDate'))
-                #sd = datetime.datetime.fromtimestamp(int(ms)/1000.0)
+                edate = re.sub(r'\/Date\(([0-9]*)\)\/',r'd\1',y.get('EndDate'))
+                #edate = datetime.datetime.fromtimestamp(int(edate)/1000.0)
             else:
                 edate = -99
-            #EndDate = edate
-            EndDate = y.get('EndDate') if y.get('EndDate') else ''
+            EndDate = edate
+            #EndDate = y.get('EndDate') if y.get('EndDate') else ''
 
             IsFeatured = y.get('IsFeatured') if y.get('IsFeatured') else -99
             HasGallery = y.get('HasGallery') if y.get('HasGallery') else -99
@@ -59,6 +55,11 @@ def insert_search_results(propertyPages, dbPath):
             Easting = y.get('GeographicLocation').get('Easting') if y.get('GeographicLocation').get('Easting') else -99
             Accuracy = y.get('GeographicLocation').get('Accuracy') if y.get('GeographicLocation').get('Accuracy') else -99
             PriceDisplay = y.get('PriceDisplay') if y.get('PriceDisplay') else ''
+            
+            if ('$' in y.get('PriceDisplay')):
+                StartPrice = re.sub(r'.*\$(.*)',r'\1',y.get('PriceDisplay'))
+                StartPrice = re.sub(r',',r'',StartPrice) # re-use StartPrice field as it seems unused
+
             Address = y.get('Address') if y.get('Address') else ''
             District = y.get('District') if y.get('District') else ''
             AgencyReference = y.get('AgencyReference') if y.get('AgencyReference') else ''

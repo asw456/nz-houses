@@ -32,11 +32,16 @@ def populate_trademe_listing_table():
 
 		ids = np.zeros([len(rows),1],dtype=int)
 		i = 0
-		for row in rows[:5]:
+		for row in rows:#[:5]:
 			ids[i] = row[0]
 			i += 1
-		
-		print ids[:5]
+		#print ids[:10]
+
+	number_of_hours = len(ids)/1000.0
+	print int(np.ceil(number_of_hours))
+
+	#for j in range(0,len(ids)):
+	#	print ids[j]
 
 if __name__ == '__main__':
 	
