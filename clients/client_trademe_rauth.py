@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 #http://api.trademe.co.nz/v1/Listings/553527490.json
 
-import oauth2 as oauth
+from rauth.service import OAuth1Service
 import time
 import urllib2
 import json
 import datetime
+import math
 
 def retrieve_all_listings(date_from,region):
 
@@ -41,51 +42,35 @@ def retrieve_all_listings(date_from,region):
 
 	url = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
 
-	params = {
-	    'oauth_version': "1.0",
-	    'oauth_nonce': oauth.generate_nonce(),
-	    'oauth_timestamp': int(time.time())
-	}
-
 	with open('./tmapikeys.txt') as fileObject:
 		KEYHERE = fileObject.readline().strip()
 		SECRETHERE = fileObject.readline().strip()
 		CONSUMERKEYHERE = fileObject.readline().strip()
 		CONSUMERSECRETHERE = fileObject.readline().strip()
 
-	# Token.key and Token.secret are obtained after three-legged authentication.
-	token = oauth.Token(key=KEYHERE, secret=SECRETHERE)
-	consumer = oauth.Consumer(key=CONSUMERKEYHERE, secret=CONSUMERSECRETHERE)
-
-	params['oauth_token'] = token.key
-	params['oauth_consumer_key'] = consumer.key
-
-	req = oauth.Request(method="GET", url=url, parameters=params)
-
-	signature_method = oauth.SignatureMethod_HMAC_SHA1()
-	req.sign_request(signature_method, consumer, token)
-
-	rs = urllib2.urlopen(req.to_url())
-	result_string = rs.read()
+	service = OAuth1Service(name='service', consumer_key = KEYHERE, consumer_secret = SECRETHERE)
+	session = service.get_session((CONSUMERKEYHERE, CONSUMERSECRETHERE))
 	
 	propertyPages = []
-	propertyPages.append(json.loads(result_string))
+	
+	r = session.get(url)
+	print url
+	propertyPages.append(r.json())
 
-	pages = propertyPages[0].get('TotalCount')/500
+	print 'TotalCount = ' + str(propertyPages[0].get('TotalCount'))
+	pages = int(math.ceil(propertyPages[0].get('TotalCount')/500.0))
 
-	for j in range(0,pages):
+	for j in range(2,pages+1):
 		#apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=false&date_from=2011-01-01T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=1&rows=500&sort_order=PriceAsc HTTP/1.1'
 		apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
 
-		req = oauth.Request(method="GET", url=apiRequest, parameters=params)
-		req.sign_request(signature_method, consumer, token)
-		rs = urllib2.urlopen(req.to_url())
-		
-		result_string = rs.read()
-		propertyPages.append(json.loads(result_string))
-
+		r = session.get(apiRequest)
+		print apiRequest
+		propertyPages.append(r.json())	
+	
 	print 'propertypages structure length is ' + str(len(propertyPages))
 	return propertyPages
+	
 
 def retrieve_individual_listing(listingid):
 

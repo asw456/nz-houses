@@ -5,6 +5,9 @@ import re
 import dateutil.parser
 import datetime
 
+# API Reference is at 
+# http://developer.trademe.co.nz/api-reference/search-methods/residential-search/
+
 def create_table_residential_listings(dbPath):
 
     conn = sqlite3.connect(dbPath)
@@ -29,11 +32,20 @@ def insert_search_results(propertyPages, dbPath):
     columns = ['ListingId','Title','Category','StartPrice','StartDate','EndDate','IsFeatured','HasGallery','IsBold','IsHighlighted','AsAt','CategoryPath','PictureHref','RegionId','Region','SuburbId','Suburb','ReserveState','IsClassified','Latitude','Longitude','Northing','Easting','Accuracy','PriceDisplay','Address','District','AgencyReference','LandArea','Bathrooms','Bedrooms','ListingGroup','Parking','PropertyType','PropertyId','DistrictId','AgencyId','AgencyName','AgencyPhoneNumber','AgencyWebsite','IsRealEstateAgnecy','IsLicensedPropertyAgency']
 
     property_tuple_all = []
+    num_records = 0
     
-    for x in propertyPages:#[:1]:    
+    #for x in propertyPages:  #[:1]:    
+    for i in range(0,len(propertyPages)):
+    
+        x = propertyPages[i]
         print 'starting page'
-        
-        for y in x['List']:#[:20]:    
+        #if i == 1:
+        print 'x on following line'
+        print type(x)
+        print x[u'Page']
+        print x[u'PageSize']
+    
+        for y in x[u'List']:  #[:20]:    
             ListingId = y.get('ListingId') if y.get('ListingId') else -99
             Title = y.get('Title') if y.get('Title') else ''
             Category = y.get('Category') if y.get('Category') else ''
@@ -68,11 +80,11 @@ def insert_search_results(propertyPages, dbPath):
             Suburb = y.get('Suburb') if y.get('Suburb') else ''
             ReserveState = y.get('ReserveState') if y.get('ReserveState') else -99
             IsClassified = y.get('IsClassified') if y.get('IsClassified') else -99
-            Latitude = y.get('GeographicLocation').get('Latitude') if y.get('GeographicLocation').get('Latitude') else -99
-            Longitude = y.get('GeographicLocation').get('Longitude') if y.get('GeographicLocation').get('Longitude') else -99
-            Northing = y.get('GeographicLocation').get('Northing') if y.get('GeographicLocation').get('Northing') else -99
-            Easting = y.get('GeographicLocation').get('Easting') if y.get('GeographicLocation').get('Easting') else -99
-            Accuracy = y.get('GeographicLocation').get('Accuracy') if y.get('GeographicLocation').get('Accuracy') else -99
+            Latitude = y.get('GeographicLocation').get('Latitude') if (y.get('GeographicLocation') and y.get('GeographicLocation').get('Latitude')) else -99
+            Longitude = y.get('GeographicLocation').get('Longitude') if (y.get('GeographicLocation') and y.get('GeographicLocation').get('Longitude')) else -99
+            Northing = y.get('GeographicLocation').get('Northing') if (y.get('GeographicLocation') and y.get('GeographicLocation').get('Northing')) else -99
+            Easting = y.get('GeographicLocation').get('Easting') if (y.get('GeographicLocation') and y.get('GeographicLocation').get('Easting')) else -99
+            Accuracy = y.get('GeographicLocation').get('Accuracy') if (y.get('GeographicLocation') and y.get('GeographicLocation').get('Accuracy')) else -99
             PriceDisplay = y.get('PriceDisplay') if y.get('PriceDisplay') else ''
             
             if ('$' in y.get('PriceDisplay')):
@@ -90,28 +102,40 @@ def insert_search_results(propertyPages, dbPath):
             PropertyType = y.get('PropertyType') if y.get('PropertyType') else ''
             PropertyId = y.get('PropertyId') if y.get('PropertyId') else ''
             DistrictId = y.get('DistrictId') if y.get('DistrictId') else -99
-            AgencyId = y.get('AgencyId') if y.get('AgencyId') else -99
-            AgencyName = y.get('AgencyName') if y.get('AgencyName') else ''
-            AgencyPhoneNumber = y.get('AgencyPhoneNumber') if y.get('AgencyPhoneNumber') else ''
-            AgencyWebsite = y.get('AgencyWebsite') if y.get('AgencyWebsite') else ''
-            IsRealEstateAgnecy = y.get('IsRealEstateAgnecy') if y.get('IsRealEstateAgnecy') else -99
+            
+            
+            
+            AgencyId = y.get('Agency').get('Id') if (y.get('Agency') and y.get('Agency').get('Id')) else -99
+            AgencyName = y.get('Agency').get('Name') if (y.get('Agency') and y.get('Agency').get('Name')) else ''
+            AgencyPhoneNumber = y.get('Agency').get('PhoneNumber') if (y.get('Agency') and y.get('Agency').get('PhoneNumber')) else ''
+            AgencyType = y.get('Agency').get('Type') if (y.get('Agency') and y.get('Agency').get('Type')) else ''
+            IsRealEstateAgnecy = y.get('Agency').get('IsRealEstateAgnecy') if (y.get('Agency') and y.get('Agency').get('IsRealEstateAgnecy')) else -99
             IsLicensedPropertyAgency = y.get('IsLicensedPropertyAgency') if y.get('IsLicensedPropertyAgency') else -99
 
-            property_tuple = (ListingId,Title,Category,StartPrice,StartDate,EndDate,IsFeatured,HasGallery,IsBold,IsHighlighted,AsAt,CategoryPath,PictureHref,RegionId,Region,SuburbId,Suburb,ReserveState,IsClassified,Latitude,Longitude,Northing,Easting,Accuracy,PriceDisplay,Address,District,AgencyReference,LandArea,Bathrooms,Bedrooms,ListingGroup,Parking,PropertyType,PropertyId,DistrictId,AgencyId,AgencyName,AgencyPhoneNumber,AgencyWebsite,IsRealEstateAgnecy,IsLicensedPropertyAgency)
+            
+            
+            
+            
+            
+            property_tuple = (ListingId,Title,Category,StartPrice,StartDate,EndDate,IsFeatured,HasGallery,IsBold,IsHighlighted,AsAt,CategoryPath,PictureHref,RegionId,Region,SuburbId,Suburb,ReserveState,IsClassified,Latitude,Longitude,Northing,Easting,Accuracy,PriceDisplay,Address,District,AgencyReference,LandArea,Bathrooms,Bedrooms,ListingGroup,Parking,PropertyType,PropertyId,DistrictId,AgencyId,AgencyName,AgencyPhoneNumber,AgencyType,IsRealEstateAgnecy,IsLicensedPropertyAgency)
+            num_records += 1
             property_tuple_all.append(property_tuple)
 
         print 'finished page'
 
-    print 'starting database'
+    print 'number of records by counter ' + str(num_records)
+    print 'length of property_tuple     ' + str(len(property_tuple_all))
+    print 'starting database entry'
     #conn = sqlite3.connect(":memory:")
     conn = sqlite3.connect(dbPath)
     with conn:
         cur = conn.cursor()
-        #cur.execute("DROP TABLE IF EXISTS residential_listings")
-        #cur.execute("CREATE TABLE residential_listings (ListingId INTEGER,Title VARCHAR(100),Category VARCHAR(50),StartPrice REAL,StartDate INTEGER,EndDate INTEGER,IsFeatured INTEGER,HasGallery INTEGER,IsBold INTEGER,IsHighlighted INTEGER,AsAt INTEGER,CategoryPath VARCHAR(100),PictureHref VARCHAR(100),RegionId INTEGER,Region VARCHAR(50),SuburbId INTEGER,Suburb VARCHAR(100),ReserveState INTEGER,IsClassified INTEGER,Latitude REAL,Longitude REAL,Northing INTEGER,Easting INTEGER,Accuracy INTEGER,PriceDisplay VARCHAR(100),Address VARCHAR(100),District VARCHAR(100),AgencyReference VARCHAR(10),LandArea INTEGER,Bathrooms INTEGER,Bedrooms INTEGER,ListingGroup VARCHAR(100),Parking VARCHAR(100),PropertyType VARCHAR(50),PropertyId VARCHAR(50),DistrictId INTEGER,AgencyId INTEGER,AgencyName VARCHAR(255),AgencyPhoneNumber VARCHAR(20),AgencyWebsite VARCHAR(100),IsRealEstateAgnecy INTEGER,IsLicensedPropertyAgency INTEGER)")
+        cur.execute("DROP TABLE IF EXISTS residential_listings")
+        cur.execute("CREATE TABLE residential_listings (ListingId INTEGER,Title VARCHAR(100),Category VARCHAR(50),StartPrice REAL,StartDate INTEGER,EndDate INTEGER,IsFeatured INTEGER,HasGallery INTEGER,IsBold INTEGER,IsHighlighted INTEGER,AsAt INTEGER,CategoryPath VARCHAR(100),PictureHref VARCHAR(100),RegionId INTEGER,Region VARCHAR(50),SuburbId INTEGER,Suburb VARCHAR(100),ReserveState INTEGER,IsClassified INTEGER,Latitude REAL,Longitude REAL,Northing INTEGER,Easting INTEGER,Accuracy INTEGER,PriceDisplay VARCHAR(100),Address VARCHAR(100),District VARCHAR(100),AgencyReference VARCHAR(10),LandArea INTEGER,Bathrooms INTEGER,Bedrooms INTEGER,ListingGroup VARCHAR(100),Parking VARCHAR(100),PropertyType VARCHAR(50),PropertyId VARCHAR(50),DistrictId INTEGER,AgencyId INTEGER,AgencyName VARCHAR(255),AgencyPhoneNumber VARCHAR(20),AgencyType VARCHAR(100),IsRealEstateAgnecy INTEGER,IsLicensedPropertyAgency INTEGER)")
         #cur.execute("INSERT INTO Cars VALUES(1,'Audi',52642)")
 
         cur.executemany("INSERT INTO residential_listings VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", property_tuple_all)
+    print 'finished database entry'
 
 '''
 def insert_listing_result():
