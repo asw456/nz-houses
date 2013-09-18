@@ -1,9 +1,22 @@
 #!/usr/bin/env python
-"""
-script
-"""
 
-import MortgageCalculator as mortcalc
+#import MortgageCalculator as mortcalc
+class MortgageCalculator():
+    
+    P = 0;
+    i = 0;
+    N = 0;
+    
+    def __init__(self, P, i, N):
+        self.P = P
+        self.i = i / 12.0
+        self.N = N
+        
+    def calculate(self, P, i, N):
+        
+        return P * ( i / (1 - (1 + i) ** (- N)))
+
+
 
 print "Please enter the principal amount"
 user_principal = raw_input(">")
@@ -17,9 +30,9 @@ print "Please enter the term in years"
 user_term = raw_input(">")
 term = float(user_term) * 12
 
-initalize = mortcalc.MortgageCalculator(principal, interest, term)
+initalize = MortgageCalculator(principal, interest, term)
 
-result = mortcalc.MortgageCalculator.calculate(initalize, principal, interest, term)
+result = MortgageCalculator.calculate(initalize, principal, interest, term)
 
 print '${0:.2f}'.format(result)
 

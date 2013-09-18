@@ -1,3 +1,5 @@
+# custom
+mortgage/*
 
 # api keys
 tmapikeys.txt
@@ -7,6 +9,8 @@ kdapikeys.txt
 db/
 json/
 data/
+economy/
+superseeded/
 
 *.py[cod]
 
