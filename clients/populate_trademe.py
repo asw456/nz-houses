@@ -16,9 +16,10 @@ def populate_trademe_search_table(database_file):
 	propertyPages = client_trademe.retrieve_all_listings('2011-01-01','3')
 	# second argument is region. 3 is Canterbury/Christchurch(?)
 	
+	#with open('/Users/james/development/resources/nz-houses/data/propertyPages.json', 'w') as json_f:
+	#	json.dump(propertyPages, json_f)
 	
 	#propertyPages = json.load(open('../data/propertyPages.json'))
-	
 	dao_sqlite.insert_search_results(propertyPages,database_file)
 	
 
@@ -49,15 +50,18 @@ def populate_trademe_listing_table():
 if __name__ == '__main__':
 	
 	parser = argparse.ArgumentParser(description='Pull Residential Listings from Trademe to sqlite3 database')
-    parser.add_argument("-db", "--dbFilePath", required=True, help="sqlite3 database file path")
-    parser.add_argument("-ed", "--endDate", required=False, help="End date of data for copy job. Needs to be in the format yyyyMMdd. Date will be attached to end of source. E.g. -ed 20130513. Date needs to be represented in folder structure of the bucket. E.g. s3n://sourceBucket/20130513")
-    args = parser.parse_args();
-    
-
-    database_file = '/Users/james/development/resources/nz-houses/db/test.db'
-
-	populate_trademe_search_table(database_file)
 	
+	parser.add_argument("-db", "--dbFilePath", \
+		required=False, \
+		default='/Users/james/development/resources/nz-houses/db/test.db', \
+		help='sqlite3 database file path')
 	
+	parser.add_argument("-ed", "--endDate",
+		required=False,
+		help="stuff")
+	
+	args = parser.parse_args();
+	
+	populate_trademe_search_table(args.dbFilePath)
 	#populate_trademe_listing_table()
 

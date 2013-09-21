@@ -45,7 +45,7 @@ def retrieve_all_listings(date_from,region):
 	url = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
 	print url
 
-	with open('./tmapikeys.txt') as fileObject:
+	with open('/Users/james/development/resources/nz-houses/clients/tmapikeys.txt') as fileObject:
 		KEYHERE = fileObject.readline().strip()
 		SECRETHERE = fileObject.readline().strip()
 		CONSUMERKEYHERE = fileObject.readline().strip()
@@ -94,5 +94,5 @@ def retrieve_individual_listing(listingid):
 
 if __name__ == '__main__':
     
-    retrieve_individual_listing(593811323)
+    print retrieve_individual_listing(593811323)
 	#retrieve_all_listings()

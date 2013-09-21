@@ -101,19 +101,18 @@ def insert_search_results(propertyPages, dbPath):
             
             
             
-            AgencyId = y.get('Agency').get('Id') if (y.get('Agency') and y.get('Agency').get('Id')) else -99
-            AgencyName = y.get('Agency').get('Name') if (y.get('Agency') and y.get('Agency').get('Name')) else ''
-            AgencyPhoneNumber = y.get('Agency').get('PhoneNumber') if (y.get('Agency') and y.get('Agency').get('PhoneNumber')) else ''
-            AgencyType = y.get('Agency').get('Type') if (y.get('Agency') and y.get('Agency').get('Type')) else ''
-            IsRealEstateAgnecy = y.get('Agency').get('IsRealEstateAgnecy') if (y.get('Agency') and y.get('Agency').get('IsRealEstateAgnecy')) else -99
-            IsLicensedPropertyAgency = y.get('IsLicensedPropertyAgency') if y.get('IsLicensedPropertyAgency') else -99
+            AgencyId                    = y.get('Agency').get('Id')                         if (y.get('Agency') and y.get('Agency').get('Id')) else -99
+            AgencyName                  = y.get('Agency').get('Name')                       if (y.get('Agency') and y.get('Agency').get('Name')) else ''
+            AgencyPhoneNumber           = y.get('Agency').get('PhoneNumber')                if (y.get('Agency') and y.get('Agency').get('PhoneNumber')) else ''
+            IsRealEstateAgency          = y.get('Agency').get('IsRealEstateAgency')         if (y.get('Agency') and y.get('Agency').get('IsRealEstateAgency')) else 'false'
+            IsLicensedPropertyAgency    = y.get('Agency').get('IsLicensedPropertyAgency')   if (y.get('Agency') and y.get('Agency').get('IsLicensedPropertyAgency')) else 'false'
 
             
             
             
             
             
-            property_tuple = (ListingId,Title,Category,StartPrice,StartDate,EndDate,IsFeatured,HasGallery,IsBold,IsHighlighted,AsAt,CategoryPath,PictureHref,RegionId,Region,SuburbId,Suburb,ReserveState,IsClassified,Latitude,Longitude,Northing,Easting,Accuracy,PriceDisplay,Address,District,AgencyReference,LandArea,Bathrooms,Bedrooms,ListingGroup,Parking,PropertyType,PropertyId,DistrictId,AgencyId,AgencyName,AgencyPhoneNumber,AgencyType,IsRealEstateAgnecy,IsLicensedPropertyAgency)
+            property_tuple = (ListingId,Title,Category,StartPrice,StartDate,EndDate,IsFeatured,HasGallery,IsBold,IsHighlighted,AsAt,CategoryPath,PictureHref,RegionId,Region,SuburbId,Suburb,ReserveState,IsClassified,Latitude,Longitude,Northing,Easting,Accuracy,PriceDisplay,Address,District,AgencyReference,LandArea,Bathrooms,Bedrooms,ListingGroup,Parking,PropertyType,PropertyId,DistrictId,AgencyId,AgencyName,AgencyPhoneNumber,IsRealEstateAgency,IsLicensedPropertyAgency)
             num_records += 1
             property_tuple_all.append(property_tuple)
 
@@ -127,10 +126,10 @@ def insert_search_results(propertyPages, dbPath):
     with conn:
         cur = conn.cursor()
         cur.execute("DROP TABLE IF EXISTS residential_listings")
-        cur.execute("CREATE TABLE residential_listings (ListingId INTEGER,Title VARCHAR(100),Category VARCHAR(50),StartPrice REAL,StartDate INTEGER,EndDate INTEGER,IsFeatured INTEGER,HasGallery INTEGER,IsBold INTEGER,IsHighlighted INTEGER,AsAt INTEGER,CategoryPath VARCHAR(100),PictureHref VARCHAR(100),RegionId INTEGER,Region VARCHAR(50),SuburbId INTEGER,Suburb VARCHAR(100),ReserveState INTEGER,IsClassified INTEGER,Latitude REAL,Longitude REAL,Northing INTEGER,Easting INTEGER,Accuracy INTEGER,PriceDisplay VARCHAR(100),Address VARCHAR(100),District VARCHAR(100),AgencyReference VARCHAR(10),LandArea INTEGER,Bathrooms INTEGER,Bedrooms INTEGER,ListingGroup VARCHAR(100),Parking VARCHAR(100),PropertyType VARCHAR(50),PropertyId VARCHAR(50),DistrictId INTEGER,AgencyId INTEGER,AgencyName VARCHAR(255),AgencyPhoneNumber VARCHAR(20),AgencyType VARCHAR(100),IsRealEstateAgnecy INTEGER,IsLicensedPropertyAgency INTEGER)")
+        cur.execute("CREATE TABLE residential_listings (ListingId INTEGER,Title VARCHAR(100),Category VARCHAR(50),StartPrice REAL,StartDate INTEGER,EndDate INTEGER,IsFeatured INTEGER,HasGallery INTEGER,IsBold INTEGER,IsHighlighted INTEGER,AsAt INTEGER,CategoryPath VARCHAR(100),PictureHref VARCHAR(100),RegionId INTEGER,Region VARCHAR(50),SuburbId INTEGER,Suburb VARCHAR(100),ReserveState INTEGER,IsClassified INTEGER,Latitude REAL,Longitude REAL,Northing INTEGER,Easting INTEGER,Accuracy INTEGER,PriceDisplay VARCHAR(100),Address VARCHAR(100),District VARCHAR(100),AgencyReference VARCHAR(10),LandArea INTEGER,Bathrooms INTEGER,Bedrooms INTEGER,ListingGroup VARCHAR(100),Parking VARCHAR(100),PropertyType VARCHAR(50),PropertyId VARCHAR(50),DistrictId INTEGER,AgencyId INTEGER,AgencyName VARCHAR(255),AgencyPhoneNumber VARCHAR(20),IsRealEstateAgnecy VARCHAR(6),IsLicensedPropertyAgency VARCHAR(6))")
         #cur.execute("INSERT INTO Cars VALUES(1,'Audi',52642)")
 
-        cur.executemany("INSERT INTO residential_listings VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", property_tuple_all)
+        cur.executemany("INSERT INTO residential_listings VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", property_tuple_all)
     print 'finished database entry'
 
 
@@ -138,3 +137,92 @@ def insert_search_results(propertyPages, dbPath):
 if __name__ == '__main__':
     insert_search_results()
 
+
+
+
+
+'''
+{
+   "Category":"0350-5748-3399-",
+   "AsAt":"/Date(1379725562350)/",
+   "District":"Christchurch City",
+   "Title":"More Than Meets The Eye!",
+   "ListingLength":null,
+   "Agency":{
+      "Website":"http://www.homes4sale.co.nz",
+      "Name":"Gold Real Estate Group Papanui, Licensed Agent (REAA 2008)",
+      "PhoneNumber":"+64-3-3526166",
+      "IsRealEstateAgency":true,
+      "Agents":[
+         {
+            "FullName":"Tracy Frew",
+            "MobilePhoneNumber":"(027) 5330128",
+            "OfficePhoneNumber":"(03) 3510001"
+         }
+      ],
+      "Logo":"https://trademe.tmcdn.co.nz/tm/property/agent_logos/3521747-3.jpg",
+      "Id":6048,
+      "IsLicensedPropertyAgency":true
+   },
+   "DistrictId":60,
+   "Bedrooms":4,
+   "ListingGroup":"PROPERTY",
+   "NoteDate":"/Date(0)/",
+   "StartDate":"/Date(1379693641040)/",
+   "PriceDisplay":"To be auctioned",
+   "EndDate":"/Date(1382109241040)/",
+   "StartPrice":0,
+   "RegionId":3,
+   "IsBold":true,
+   "Suburb":"Papanui",
+   "ReserveState":3,
+   "IsClassified":true,
+   "Address":"36 Richards Avenue",
+   "HasGallery":true,
+   "IsHighlighted":true,
+   "ListingId":641386568,
+   "IsFeatured":true,
+   "Region":"Canterbury",
+   "PropertyType":"House",
+   "AgencyReference":"PI28649",
+   "AdjacentSuburbIds":[
+      2042,
+      2214,
+      2215,
+      2280,
+      2507,
+      2508,
+      2511,
+      2557,
+      2558,
+      3322,
+      3454
+   ],
+   "Bathrooms":1,
+   "SuburbId":2557,
+   "GeographicLocation":{
+      "Latitude":-43.4946438,
+      "Accuracy":1,
+      "Easting":1567462,
+      "Longitude":172.597562,
+      "Northing":5184175
+   },
+   "AdjacentSuburbNames":[
+      "Marshland",
+      "St. Albans",
+      "Mairehau",
+      "Bryndwr",
+      "Bishopdale",
+      "Casebrook",
+      "Redwood",
+      "Papanui",
+      "Merivale",
+      "Strowan",
+      "Strowan"
+   ],
+   "PropertyId":"DLJ013",
+   "Parking":"2 car garaging, 2 off street",
+   "CategoryPath":"/Trade-Me-Property/Residential/For-Sale",
+   "PictureHref":"https://trademe.tmcdn.co.nz/photoserver/full/285022665.jpg"
+}
+'''

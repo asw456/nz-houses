@@ -15,8 +15,13 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 rm(con,drv,rs)
 
+# summary stats
+mean(subset(h_listings,h_listings$StartPrice > 0)$StartPrice)
+ddply(price, .(), summarise, mean=mean(price), sd=sd(price))
+
 # subsets
 h_west <- subset(h_listings, h_listings$Longitude < 172.639332) # around Manchester Street
+h_west <- subset(h_west, h_west$District == 'Christchurch City')
 h_east <- subset(h_listings, h_listings$Longitude >= 172.639332) # http://itouchmap.com/latlong.html
 
 h_west_cheap <- subset(h_west, h_west$StartPrice < 300000)
