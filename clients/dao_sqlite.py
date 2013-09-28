@@ -7,7 +7,23 @@ import datetime
 
 # API Reference is at 
 # http://developer.trademe.co.nz/api-reference/search-methods/residential-search/
-    
+
+def create_table_residential(dbPath):
+  
+    conn = sqlite3.connect(dbPath)
+    with conn:
+        cur = conn.cursor()
+        #cur.execute("DROP TABLE IF EXISTS residential_listings")
+        cur.execute("CREATE TABLE IF NOT EXISTS residential_listings (ListingId INTEGER,Title VARCHAR(100),Category VARCHAR(50),StartPrice REAL,StartDate INTEGER,EndDate INTEGER,IsFeatured INTEGER,HasGallery INTEGER,IsBold INTEGER,IsHighlighted INTEGER,AsAt INTEGER,CategoryPath VARCHAR(100),PictureHref VARCHAR(100),RegionId INTEGER,Region VARCHAR(50),SuburbId INTEGER,Suburb VARCHAR(100),ReserveState INTEGER,IsClassified VARCHAR(5),Latitude REAL,Longitude REAL,Northing INTEGER,Easting INTEGER,Accuracy INTEGER,PriceDisplay VARCHAR(100),Address VARCHAR(100),District VARCHAR(100),AgencyReference VARCHAR(10),LandArea INTEGER,Bathrooms INTEGER,Bedrooms INTEGER,ListingGroup VARCHAR(100),Parking VARCHAR(100),PropertyType VARCHAR(50),PropertyId VARCHAR(50),DistrictId INTEGER,AgencyId INTEGER,AgencyName VARCHAR(255),AgencyPhoneNumber VARCHAR(20),IsRealEstateAgnecy VARCHAR(6),IsLicensedPropertyAgency VARCHAR(6), UNIQUE(ListingId) ON CONFLICT REPLACE)")
+
+def create_table_rental(dbPath):
+  
+    conn = sqlite3.connect(dbPath)
+    with conn:
+        cur = conn.cursor()
+        #cur.execute("DROP TABLE IF EXISTS rental_listings")
+        cur.execute("CREATE TABLE IF NOT EXISTS rental_listings (ListingId INTEGER,Title VARCHAR(100),Category VARCHAR(50),RentPerWeek INTEGER,SmokersOkay VARCHAR(5),StartDate INTEGER,EndDate INTEGER,IsFeatured INTEGER,HasGallery INTEGER,IsBold INTEGER,IsHighlighted INTEGER,AsAt INTEGER,CategoryPath VARCHAR(100),PictureHref VARCHAR(100),RegionId INTEGER,Region VARCHAR(50),SuburbId INTEGER,Suburb VARCHAR(100),ReserveState INTEGER,IsClassified VARCHAR(5),Latitude REAL,Longitude REAL,Northing INTEGER,Easting INTEGER,Accuracy INTEGER,PriceDisplay VARCHAR(100),Address VARCHAR(100),District VARCHAR(100),AgencyReference VARCHAR(10),LandArea INTEGER,Bathrooms INTEGER,Bedrooms INTEGER,ListingGroup VARCHAR(100),Parking VARCHAR(100),PropertyType VARCHAR(50),PropertyId VARCHAR(50),DistrictId INTEGER,AgencyId INTEGER,AgencyName VARCHAR(255),AgencyPhoneNumber VARCHAR(20),IsRealEstateAgnecy VARCHAR(6),IsLicensedPropertyAgency VARCHAR(6), UNIQUE(ListingId) ON CONFLICT REPLACE)")        
+        
 def create_table_schools(dbPath):
 
     conn = sqlite3.connect(dbPath)
@@ -106,8 +122,6 @@ def insert_residential_json(residential_json_pages, dbPath):
     conn = sqlite3.connect(dbPath) #conn = sqlite3.connect(":memory:")
     with conn:
         cur = conn.cursor()
-        cur.execute("DROP TABLE IF EXISTS residential_listings")
-        cur.execute("CREATE TABLE residential_listings (ListingId INTEGER,Title VARCHAR(100),Category VARCHAR(50),StartPrice REAL,StartDate INTEGER,EndDate INTEGER,IsFeatured INTEGER,HasGallery INTEGER,IsBold INTEGER,IsHighlighted INTEGER,AsAt INTEGER,CategoryPath VARCHAR(100),PictureHref VARCHAR(100),RegionId INTEGER,Region VARCHAR(50),SuburbId INTEGER,Suburb VARCHAR(100),ReserveState INTEGER,IsClassified VARCHAR(5),Latitude REAL,Longitude REAL,Northing INTEGER,Easting INTEGER,Accuracy INTEGER,PriceDisplay VARCHAR(100),Address VARCHAR(100),District VARCHAR(100),AgencyReference VARCHAR(10),LandArea INTEGER,Bathrooms INTEGER,Bedrooms INTEGER,ListingGroup VARCHAR(100),Parking VARCHAR(100),PropertyType VARCHAR(50),PropertyId VARCHAR(50),DistrictId INTEGER,AgencyId INTEGER,AgencyName VARCHAR(255),AgencyPhoneNumber VARCHAR(20),IsRealEstateAgnecy VARCHAR(6),IsLicensedPropertyAgency VARCHAR(6))")
         #cur.execute("INSERT INTO Cars VALUES(1,'Audi',52642)")
         cur.executemany("INSERT INTO residential_listings VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", property_tuple_all)
     
@@ -202,8 +216,6 @@ def insert_rental_json(rental_json_pages, dbPath):
     conn = sqlite3.connect(dbPath) #conn = sqlite3.connect(":memory:")
     with conn:
         cur = conn.cursor()
-        cur.execute("DROP TABLE IF EXISTS rental_listings")
-        cur.execute("CREATE TABLE rental_listings (ListingId INTEGER,Title VARCHAR(100),Category VARCHAR(50),RentPerWeek INTEGER,SmokersOkay VARCHAR(5),StartDate INTEGER,EndDate INTEGER,IsFeatured INTEGER,HasGallery INTEGER,IsBold INTEGER,IsHighlighted INTEGER,AsAt INTEGER,CategoryPath VARCHAR(100),PictureHref VARCHAR(100),RegionId INTEGER,Region VARCHAR(50),SuburbId INTEGER,Suburb VARCHAR(100),ReserveState INTEGER,IsClassified VARCHAR(5),Latitude REAL,Longitude REAL,Northing INTEGER,Easting INTEGER,Accuracy INTEGER,PriceDisplay VARCHAR(100),Address VARCHAR(100),District VARCHAR(100),AgencyReference VARCHAR(10),LandArea INTEGER,Bathrooms INTEGER,Bedrooms INTEGER,ListingGroup VARCHAR(100),Parking VARCHAR(100),PropertyType VARCHAR(50),PropertyId VARCHAR(50),DistrictId INTEGER,AgencyId INTEGER,AgencyName VARCHAR(255),AgencyPhoneNumber VARCHAR(20),IsRealEstateAgnecy VARCHAR(6),IsLicensedPropertyAgency VARCHAR(6))")
         #cur.execute("INSERT INTO Cars VALUES(1,'Audi',52642)")
         cur.executemany("INSERT INTO rental_listings VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", property_tuple_all)
     

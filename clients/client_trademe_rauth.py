@@ -44,7 +44,7 @@ def request_listings(listing_type,date_from,region):
 	
 	# url = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
 	# url = 'https://api.trademe.co.nz/v1/Search/Property/' + listing_type + '.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
-	url = 'https://api.trademe.co.nz/v1/Search/Property/' + listing_type + '.json?date_from=' + date_from + 'T00%3A00&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
+	url = 'https://api.trademe.co.nz/v1/Search/Property/' + listing_type + '.json?date_from=' + date_from + 'T00%3A00&photo_size=FullSize&region=' + region + '&district=60' + '&rows=500&sort_order=PriceAsc HTTP/1.1'
 	print url
 
 	with open('/Users/james/development/resources/nz-houses/clients/tmapikeys.txt') as fileObject:
@@ -65,7 +65,7 @@ def request_listings(listing_type,date_from,region):
 	for j in range(2,pages+1):
 		# apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=false&date_from=2011-01-01T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=1&rows=500&sort_order=PriceAsc HTTP/1.1'
 		# apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/' + listing_type + '.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
-		apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/' + listing_type + '.json?date_from=' + date_from + 'T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
+		apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/' + listing_type + '.json?date_from=' + date_from + 'T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=' + region + '&district=60' + '&rows=500&sort_order=PriceAsc HTTP/1.1'
 		print apiRequest
 
 		r = session.get(apiRequest)

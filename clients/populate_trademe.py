@@ -18,8 +18,10 @@ def populate_residential_search_table(database_file):
 	
 	#with open('/Users/james/development/resources/nz-houses/data/residential_pages.json', 'w') as json_f:
 	#	json.dump(residential_json_pages, json_f)
-	#residential_json_pages = json.load(open('../data/residential_json_pages.json'))
+	#with open('/Users/james/development/resources/nz-houses/data/residential_pages.json', 'r') as json_f:
+	#	residential_json_pages = json.load(json_f)
 	
+	dao_sqlite.create_table_residential(database_file)
 	dao_sqlite.insert_residential_json(residential_json_pages,database_file)
 	
 def populate_rental_search_table(database_file):
@@ -27,10 +29,12 @@ def populate_rental_search_table(database_file):
 	rental_json_pages = client_trademe.request_listings('Rental','2011-01-01','3')
 	# second argument is region. 3 is Canterbury/Christchurch(?)
 	
-	#with open('/Users/james/development/resources/nz-houses/data/residential_pages.json', 'w') as json_f:
-	#	json.dump(residential_json_pages, json_f)
-	#rental_json_pages = json.load(open('../data/rental_json_pages.json'))
+	#with open('/Users/james/development/resources/nz-houses/data/rental_pages.json', 'w') as json_f:
+	#	json.dump(rental_json_pages, json_f)
+	#with open('/Users/james/development/resources/nz-houses/data/rental_pages.json', 'r') as json_f:
+	#	rental_json_pages = json.load(json_f)
 	
+	dao_sqlite.create_table_rental(database_file)
 	dao_sqlite.insert_rental_json(rental_json_pages,database_file)
 
 

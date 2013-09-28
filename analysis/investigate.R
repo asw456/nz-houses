@@ -21,17 +21,36 @@ dbDisconnect(con)
 dbUnloadDriver(drv)
 rm(con,drv,rs)
 
-# summary stats
-MeanRentPerSuburb <- data.table(ddply(rental, .(Suburb), summarise, rent_mean=mean(RentPerWeek), rent_sd=sd(RentPerWeek)))[order(rent_mean)]
-MeanPricePerSuburb <- data.table(ddply(subset(residential,StartPrice != -99), .(Suburb), summarise, price_mean=mean(StartPrice), price_sd=sd(StartPrice)))[order(price_mean)]
 
+
+# ====================     summary stats
+MeanRentPerSuburb_Overall <- data.table(ddply(rental, .(Suburb), summarise, counts=length(Suburb),rent_mean=mean(RentPerWeek), rent_median=median(RentPerWeek),rent_sd=sd(RentPerWeek)))[order(rent_mean)]
+MeanPricePerSuburb_Overall <- data.table(ddply(subset(residential,StartPrice != -99), .(Suburb), summarise, counts=length(Suburb),price_mean=mean(StartPrice), price_median=median(StartPrice), price_sd=sd(StartPrice)))[order(price_mean)]
+
+# ====================     how many houses have a price listed
+ListingsWithPrice <- data.table(ddply(residential, .(), summarise, count_total=length(Suburb), count_noprice=count(StartPrice==-99)$freq[1],count_hasprice=count(StartPrice==-99)$freq[2]))
+ListingsWithPriceBySuburb <- data.table(ddply(residential, .(Suburb), summarise, count_total=length(Suburb), count_noprice=count(StartPrice==-99)$freq[1],count_hasprice=count(StartPrice==-99)$freq[2]))[order(-count_total)]
+
+# ====================     areas of interest
 residential_west <- sqldf("SELECT * FROM residential WHERE StartPrice > 100000 AND StartPrice < 500000 AND District == 'Christchurch City'
                            AND PropertyType != 'Apartment' AND PropertyType != 'Section' AND Longitude < 172.639332") # around manchester street
+residential_west_3plusbedrooms <- sqldf("SELECT * FROM residential WHERE Bedrooms >= 3 AND District == 'Christchurch City'
+                           AND PropertyType != 'Apartment' AND PropertyType != 'Section' AND Longitude < 172.639332") # around manchester street
+residential_northwest_3plusbedrooms <- sqldf("SELECT * FROM residential WHERE Bedrooms >= 3 AND District == 'Christchurch City'
+                           AND PropertyType != 'Apartment' AND PropertyType != 'Section' AND Longitude < 172.639332 AND Latitude > -43.541174") # around manchester street
 residential_east <- sqldf("SELECT * FROM residential WHERE StartPrice > 100000 AND StartPrice < 500000 AND District == 'Christchurch City'
                            AND PropertyType != 'Apartment' AND PropertyType != 'Section' AND Longitude >= 172.639332") # around manchester street
 
-view <- residential_west[order(StartPrice)]
-view <- subset(view, select = c(ListingId,Title, StartPrice, Suburb, Address, PropertyType))
+residential_northwest_3plusbedrooms <- data.table(residential_northwest_3plusbedrooms)[order(StartPrice)]
+residential_northwest_3plusbedrooms_fewcolumns <- subset(residential_northwest_3plusbedrooms, select = c(ListingId,Title, StartPrice, Suburb, Address, PropertyType))
+
+MeanPricePerSuburb_northwest_3plusbedrooms <- data.table(ddply(subset(residential_northwest_3plusbedrooms,StartPrice != -99), .(Suburb), summarise, counts=length(Suburb),price_mean=mean(StartPrice), price_median=median(StartPrice), price_sd=sd(StartPrice)))[order(price_mean)]
+
+
+
+yaldhurt <- data.table(sqldf("SELECT * FROM residential WHERE Bedrooms >= 3 AND District == 'Christchurch City' AND Suburb == 'Yaldhurst '
+                           AND PropertyType != 'Apartment' AND PropertyType != 'Section' AND Longitude < 172.639332"))[order(-StartPrice)]
+
 
 
 # paste('http://www.trademe.co.nz/Browse/Listing.aspx?id=','ListingId',sep="")
