@@ -8,10 +8,10 @@ import json
 import datetime
 import math
 
-def retrieve_all_listings(date_from,region):
+def request_listings(listing_type,date_from,region):
 
 	# file_format	= 'json'
-	adjacent_suburbs = 'false'	
+	# adjacent_suburbs = 'false'
 	# bathrooms_max = None	
 	# bathrooms_min = None	
 	# bedrooms_max = None	
@@ -40,9 +40,11 @@ def retrieve_all_listings(date_from,region):
 	# more complex request 
 	# 'https://api.tmsandbox.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=false&date_from=2011-01-01T00%3A00&district=1&latitude_max=12&latitude_min=13&longitude_max=14&longitude_min=15&page=1&photo_size=FullSize&property_type=House%2CSection%2CTownhouse%2CUnit&region=2&rows=500&search_string=searchstring&sort_order=PriceAsc&suburb=1 HTTP/1.1'
 
-	propertyPages = []
+	residential_json_pages = []
 	
-	url = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
+	# url = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
+	# url = 'https://api.trademe.co.nz/v1/Search/Property/' + listing_type + '.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
+	url = 'https://api.trademe.co.nz/v1/Search/Property/' + listing_type + '.json?date_from=' + date_from + 'T00%3A00&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
 	print url
 
 	with open('/Users/james/development/resources/nz-houses/clients/tmapikeys.txt') as fileObject:
@@ -55,23 +57,25 @@ def retrieve_all_listings(date_from,region):
 	session = service.get_session((CONSUMERKEYHERE, CONSUMERSECRETHERE))
 	
 	r = session.get(url)
-	propertyPages.append(r.json())
+	residential_json_pages.append(r.json())
 
-	print 'TotalCount = ' + str(propertyPages[0].get('TotalCount'))
-	pages = int(math.ceil(propertyPages[0].get('TotalCount')/500.0))
+	print 'TotalCount = ' + str(residential_json_pages[0].get('TotalCount'))
+	pages = int(math.ceil(residential_json_pages[0].get('TotalCount')/500.0))
 
 	for j in range(2,pages+1):
-		#apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=false&date_from=2011-01-01T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=1&rows=500&sort_order=PriceAsc HTTP/1.1'
-		apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
+		# apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/Residential.json?adjacent_suburbs=false&date_from=2011-01-01T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=1&rows=500&sort_order=PriceAsc HTTP/1.1'
+		# apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/' + listing_type + '.json?adjacent_suburbs=' + adjacent_suburbs + '&date_from=' + date_from + 'T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
+		apiRequest = 'https://api.trademe.co.nz/v1/Search/Property/' + listing_type + '.json?date_from=' + date_from + 'T00%3A00&page=' + str(j) + '&photo_size=FullSize&region=' + region + '&rows=500&sort_order=PriceAsc HTTP/1.1'
 		print apiRequest
 
 		r = session.get(apiRequest)
-		propertyPages.append(r.json())	
+		residential_json_pages.append(r.json())	
 	
-	print 'propertypages structure length is ' + str(len(propertyPages))
-	return propertyPages
+	print 'residential_json_pages structure length is ' + str(len(residential_json_pages))
+	return residential_json_pages
 	
-
+	
+	
 def retrieve_individual_listing(listingid):
 
 	url = "http://api.trademe.co.nz/v1/Listings/"

@@ -11,17 +11,29 @@ import sqlite3
 
 import numpy as np
 
-def populate_trademe_search_table(database_file):
+def populate_residential_search_table(database_file):
 
-	propertyPages = client_trademe.retrieve_all_listings('2011-01-01','3')
+	residential_json_pages = client_trademe.request_listings('Residential','2011-01-01','3')
 	# second argument is region. 3 is Canterbury/Christchurch(?)
 	
-	#with open('/Users/james/development/resources/nz-houses/data/propertyPages.json', 'w') as json_f:
-	#	json.dump(propertyPages, json_f)
+	#with open('/Users/james/development/resources/nz-houses/data/residential_pages.json', 'w') as json_f:
+	#	json.dump(residential_json_pages, json_f)
+	#residential_json_pages = json.load(open('../data/residential_json_pages.json'))
 	
-	#propertyPages = json.load(open('../data/propertyPages.json'))
-	dao_sqlite.insert_search_results(propertyPages,database_file)
+	dao_sqlite.insert_residential_json(residential_json_pages,database_file)
 	
+def populate_rental_search_table(database_file):
+
+	rental_json_pages = client_trademe.request_listings('Rental','2011-01-01','3')
+	# second argument is region. 3 is Canterbury/Christchurch(?)
+	
+	#with open('/Users/james/development/resources/nz-houses/data/residential_pages.json', 'w') as json_f:
+	#	json.dump(residential_json_pages, json_f)
+	#rental_json_pages = json.load(open('../data/rental_json_pages.json'))
+	
+	dao_sqlite.insert_rental_json(rental_json_pages,database_file)
+
+
 
 def populate_trademe_listing_table():
 	
@@ -62,6 +74,7 @@ if __name__ == '__main__':
 	
 	args = parser.parse_args();
 	
-	populate_trademe_search_table(args.dbFilePath)
-	#populate_trademe_listing_table()
+	populate_residential_search_table(args.dbFilePath)
+	populate_rental_search_table(args.dbFilePath)
+	
 
