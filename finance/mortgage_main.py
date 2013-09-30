@@ -17,13 +17,14 @@ class RentalIncome():
 		self.monthly_rent = self.weekly_rent*4.34812
 		
 		self.weekly_flat = 100
-		self.flatmates = 3
-		self.monthly_flat = self.weekly_flat*self.flatmates*4.34812*((52.0-3)/52)
+		self.flatmates = 1
+		self.unoccupied_weeks = 8
+		self.monthly_flat = self.weekly_flat*self.flatmates*4.34812*((52.0-self.unoccupied_weeks)/52)
 		
-	def get_monthly_rental_income():
+	def get_monthly_rental_income(self):
 		return self.monthly_rent
 		
-	def get_monthly_flat_income():
+	def get_monthly_flat_income(self):
 		return self.monthly_flat
 		
 class HouseExpenses():
@@ -40,7 +41,7 @@ class HouseExpenses():
 	def get_monthly_expenses(self):
 		return self.monthly_expenses_total
 	
-class Income():
+class SalaryIncome():
 
 	def __init__(self):
 		self.yearly_gross_income = 75000
@@ -51,7 +52,7 @@ class Income():
 		
 		self.monthly_payment = self.monthly_income / 2.0
 			
-	def get_monthly_payment(self):
+	def get_monthly_salary_payment(self):
 		return self.monthly_payment
 
 class CapitalGains():
@@ -59,7 +60,7 @@ class CapitalGains():
 	max_periods = 30*12
 	price_start  = 0.0515	
 	
-	price_array = np.zeros((max_periods,1),dtype=np.float64)
+	price_array = np.zeros((max_periods),dtype=np.float64)
 	multiplier = 1.0
 	
 	def __init__(self):
@@ -89,7 +90,7 @@ class CapitalGains():
 			price = price + self.multiplier*price_increase
 			self.price_array[i] = price
 			
-		np.savetxt('/Users/james/development/resources/nz-houses/data/math/interest_price_array.txt',self.price_array)
+		#np.savetxt('/Users/james/development/resources/nz-houses/data/math/capital_gains_array.txt',self.price_array)
 		
 		print 'maximum price = ' + str(max(self.price_array))
 			
@@ -105,8 +106,8 @@ class InterestRate():
 	max_periods = 30*12
 	rate_start  = 0.0515	
 	
-	rate_array = np.zeros((max_periods,1),dtype=np.float64)
-	multiplier = 1.0
+	rate_array = np.zeros((max_periods),dtype=np.float64)
+	multiplier = 0.5
 	
 	def __init__(self):
 		self.random_walk_probabilities = np.loadtxt('/Users/james/development/resources/nz-houses/data/math/interest_rate_walk_probabilities.txt',dtype=np.float64)
@@ -135,12 +136,13 @@ class InterestRate():
 			rate = rate + self.multiplier*rate_increase
 			self.rate_array[i] = rate
 			
-		np.savetxt('/Users/james/development/resources/nz-houses/data/math/interest_rate_array.txt',self.rate_array)
+		#np.savetxt('/Users/james/development/resources/nz-houses/data/math/interest_rate_array.txt',self.rate_array)
 		
 		print 'maximum rate = ' + str(max(self.rate_array))
 			
 	def get_interest_rate_array(self):
-		return self.rate_array
+		
+		return self.rate_array/12.0
 		
 	def plot_rate_array(self):
 		pyplot.plot(self.rate_array)
@@ -153,16 +155,66 @@ class InterestRate():
 if __name__ == "__main__":
 	
 	deposit = 80000.0
+	price   = 350000.0
+	price   = price - deposit
+	
+	interest 			= InterestRate()
+	interest_rate_array = interest.get_interest_rate_array()
+	
+	rental_income 	= RentalIncome()
+	salary_income 	= SalaryIncome()
+	house_expenses 	= HouseExpenses()
+	
+	#print 'monthly payment = ' + str(salary_income.get_monthly_salary_payment())
+	
+	max_periods = 30*12
+	
+	principal_array 		= np.zeros((max_periods),dtype=np.float64)
+	interest_payment_array 	= np.zeros((max_periods),dtype=np.float64)
+	net_payment_array		= np.zeros((max_periods),dtype=np.float64)
+	
+	principal_array[0] 			= price
+	interest_payment_array[0] 	= 0
+	net_payment_array[0]		= 0
+	
+	for i in range(1,max_periods):
+		
+		interest_payment_array[i] 	= principal_array[i-1]*interest_rate_array[i]
+		
+		if i <= 2*12:
+			net_payment_array[i] = -interest_payment_array[i] - house_expenses.get_monthly_expenses() \
+										+ rental_income.get_monthly_rental_income() \
+										+ salary_income.get_monthly_salary_payment()
+		else:
+			net_payment_array[i] = -interest_payment_array[i] - house_expenses.get_monthly_expenses() \
+										+ rental_income.get_monthly_flat_income() \
+										+ salary_income.get_monthly_salary_payment()
+		
+		if net_payment_array[i] <= 0:
+			print 'if you have to ask ... you can\'t afford it.'
+			print 'underwater at = ' + str(i/12.0) + ' years'
+			exit()
+		
+		principal_array[i] = principal_array[i-1] - net_payment_array[i]
+	
+		if principal_array[i] <= 0:
+			print 'paid off at = ' + str(i/12.0) + ' years'
+			print 'interest paid = ' + str(int(np.sum(interest_payment_array)))
+			exit()
+		
 	
 	
 	
-	interest = InterestRate()
-	rental_income = RentalIncome()
-	income = Income()
-	house_expenses = HouseExpenses()
+		#print str(i) + '\t\t' + str(net_payment_array[i]) #+ str(principal_array[i])
 	
-	print income.get_monthly_payment()
-	
+	#np.savetxt('/Users/james/development/resources/nz-houses/data/math/payment.txt',self.rate_array)
+		
+		
+		
+		 
+		
+		
+		
 	
 	
 	

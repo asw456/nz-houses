@@ -50,7 +50,9 @@ MeanPricePerSuburb_northwest_3plusbedrooms <- data.table(ddply(subset(residentia
 
 yaldhurt <- data.table(sqldf("SELECT * FROM residential WHERE Bedrooms >= 3 AND District == 'Christchurch City' AND Suburb == 'Yaldhurst '
                            AND PropertyType != 'Apartment' AND PropertyType != 'Section' AND Longitude < 172.639332"))[order(-StartPrice)]
-
+tempquery <- sqldf("SELECT * FROM residential WHERE StartPrice > 320000 AND StartPrice < 370000 AND District == 'Christchurch City' AND Bedrooms >= 3
+                           AND PropertyType != 'Apartment' AND PropertyType != 'Section' AND Longitude < 172.639332") # around manchester street
+tempquery <- subset(tempquery, select = c(ListingId,Title, StartPrice, Suburb, Address, PropertyType))
 
 
 # paste('http://www.trademe.co.nz/Browse/Listing.aspx?id=','ListingId',sep="")

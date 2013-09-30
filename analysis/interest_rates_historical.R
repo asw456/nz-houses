@@ -30,7 +30,7 @@ b$probability <- b$N/sum(b$N)
 c <- subset(zzdf,floating.zz != 'NA')[, .N, ,by=floating.zz][order(floating.zz)]
 c$probability <- c$N/sum(c$N)
 
-write.table(a,"/Users/james/development/resources/nz-houses/data/math/interest_rate_walk_probabilities.txt", row.names=FALSE, col.names=FALSE,na="-99",sep="\t")
+w#rite.table(a,"/Users/james/development/resources/nz-houses/data/math/interest_rate_walk_probabilities.txt", row.names=FALSE, col.names=FALSE,na="-99",sep="\t")
 
 
 
