@@ -103,11 +103,11 @@ class CapitalGains():
 
 class InterestRate():
 	
-	max_periods = 30*12
-	rate_start  = 0.0515	
+	max_periods 	= 30*12
+	rate_start  	= 0.068
+	fixed_period 	= 4*12	
 	
-	rate_array = np.zeros((max_periods),dtype=np.float64)
-	multiplier = 0.5
+	rate_array = rate_start*np.ones((max_periods),dtype=np.float64)
 	
 	def __init__(self):
 		self.random_walk_probabilities = np.loadtxt('/Users/james/development/resources/nz-houses/data/math/interest_rate_walk_probabilities.txt',dtype=np.float64)
@@ -120,26 +120,25 @@ class InterestRate():
 		
 		rate = self.rate_start
 		
-		for i in range(0,self.max_periods):
-			#if (i % 6) == 0:
+		for i in range(self.fixed_period,self.max_periods):
 			
-			ra = a.random()
+			# determine a rate increase for this time-step
 			for j in range(0,self.random_walk_probabilities.shape[0]):
-				if ra <= self.random_walk_probabilities[j,3]:
+				if a.random() <= self.random_walk_probabilities[j,3]:
 					rate_increase = self.random_walk_probabilities[j,0]*0.01
 					break
 			
-			rb = b.random()
-			if rb < 0.35:
+			# determine whether the step is positive or negative
+			if b.random() < 0.3:
 				rate_increase = -1.0*rate_increase
 			
-			rate = rate + self.multiplier*rate_increase
+			
+			# increment the interest rate and store the result
+			rate += rate_increase
 			self.rate_array[i] = rate
 			
 		#np.savetxt('/Users/james/development/resources/nz-houses/data/math/interest_rate_array.txt',self.rate_array)
 		
-		print 'maximum rate = ' + str(max(self.rate_array))
-			
 	def get_interest_rate_array(self):
 		
 		return self.rate_array/12.0
@@ -148,17 +147,14 @@ class InterestRate():
 		pyplot.plot(self.rate_array)
 		pyplot.show()
 
+def simulate():
 
-
-	
-	
-if __name__ == "__main__":
-	
 	deposit = 80000.0
 	price   = 350000.0
 	price   = price - deposit
 	
 	interest 			= InterestRate()
+	#interest.plot_rate_array()
 	interest_rate_array = interest.get_interest_rate_array()
 	
 	rental_income 	= RentalIncome()
@@ -193,19 +189,39 @@ if __name__ == "__main__":
 		if net_payment_array[i] <= 0:
 			print 'if you have to ask ... you can\'t afford it.'
 			print 'underwater at = ' + str(i/12.0) + ' years'
-			exit()
+			break
 		
 		principal_array[i] = principal_array[i-1] - net_payment_array[i]
 	
 		if principal_array[i] <= 0:
 			print 'paid off at = ' + str(i/12.0) + ' years'
 			print 'interest paid = ' + str(int(np.sum(interest_payment_array)))
-			exit()
+			break
+
+	return 
+
+def get_max_interest_rate():
+	
+	max = 0
+	for i in range(0,100):	
+		interest 			= InterestRate()
+		interest_rate_array = interest.get_interest_rate_array()
+		if np.max(interest_rate_array) > max:
+			max = np.max(interest_rate_array)
 		
+	print 'maximum rate = ' + str(max)
+	return max
 	
 	
+if __name__ == "__main__":
 	
-		#print str(i) + '\t\t' + str(net_payment_array[i]) #+ str(principal_array[i])
+	get_max_interest_rate()
+	
+	
+	#simulate()
+	
+	
+	#print str(i) + '\t\t' + str(net_payment_array[i]) #+ str(principal_array[i])
 	
 	#np.savetxt('/Users/james/development/resources/nz-houses/data/math/payment.txt',self.rate_array)
 		
