@@ -92,7 +92,7 @@ def retrieve_individual_listing(listingid):
 	session = service.get_session((CONSUMERKEYHERE, CONSUMERSECRETHERE))
 	
 	r = session.get(url)
-	print url
+	#print url
 	return r.json()
 
 

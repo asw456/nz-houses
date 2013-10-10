@@ -6,6 +6,7 @@ import client_trademe_rauth as client_trademe
 import dao_sqlite
 import argparse 
 import sqlite3
+import time
 #import pandas as pd
 #import pandasql.sqldf as sqldf
 
@@ -39,29 +40,40 @@ def populate_rental_search_table(database_file):
 
 
 
-def populate_trademe_listing_table():
+def populate_trademe_listing_table(database_file):
 	
 	#api request limit 1000 requests / hour ??
 
-	conn = sqlite3.connect('/Users/james/development/resources/nz-houses/db/test.db')
+	conn = sqlite3.connect(database_file)
 	with conn:
 		cur = conn.cursor()
 		cur.execute('SELECT * FROM residential_listings')
 		
 		rows = cur.fetchall()
 
-		ids = np.zeros([len(rows),1],dtype=int)
-		i = 0
-		for row in rows:#[:5]:
-			ids[i] = row[0]
-			i += 1
-		#print ids[:10]
+		ids = []
+		for row in rows:
+			ids.append(row[0])
+		#print 'ids = ' + str(ids)
 
 	number_of_hours = len(ids)/1000.0
-	print int(np.ceil(number_of_hours))
+	#print 'number of hours = ' + str(int(np.ceil(number_of_hours)))
 
-	#for j in range(0,len(ids)):
-	#	print ids[j]
+
+	dao_sqlite.create_table_residential_listings_individual('/Users/james/development/resources/nz-houses/db/prod1_listings.db')
+	
+	k = 0
+	for id in reversed(ids):
+		result = client_trademe.retrieve_individual_listing(id)
+		if 'ListingId' in result:
+			dao_sqlite.insert_individual_listing(result,'/Users/james/development/resources/nz-houses/db/prod1_listings.db')
+			#print json.dumps(result, sort_keys=True, indent=4)
+			k += 1
+		if k % 900 == 0:
+			time.sleep(3600.0 + 60)
+			
+	print 'exit 0'
+
 
 if __name__ == '__main__':
 	
@@ -69,7 +81,7 @@ if __name__ == '__main__':
 	
 	parser.add_argument("-db", "--dbFilePath", \
 		required=False, \
-		default='/Users/james/development/resources/nz-houses/db/test.db', \
+		default='/Users/james/development/resources/nz-houses/db/prod1.db', \
 		help='sqlite3 database file path')
 	
 	parser.add_argument("-ed", "--endDate",
@@ -78,7 +90,8 @@ if __name__ == '__main__':
 	
 	args = parser.parse_args();
 	
-	populate_residential_search_table(args.dbFilePath)
-	populate_rental_search_table(args.dbFilePath)
+	#populate_residential_search_table(args.dbFilePath)
+	#populate_rental_search_table(args.dbFilePath)
+	populate_trademe_listing_table(args.dbFilePath)
 	
 

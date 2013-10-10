@@ -90,7 +90,7 @@ class CapitalGains():
 			price = price + self.multiplier*price_increase
 			self.price_array[i] = price
 			
-		#np.savetxt('/Users/james/development/resources/nz-houses/data/math/capital_gains_array.txt',self.price_array)
+		np.savetxt('/Users/james/development/resources/nz-houses/data/math/capital_gains_array.txt',self.price_array)
 		
 		print 'maximum price = ' + str(max(self.price_array))
 			
@@ -118,7 +118,7 @@ class InterestRate():
 		a = random.Random()
 		b = random.Random()
 		
-		rate = self.rate_start
+		rate = 0.08
 		
 		for i in range(self.fixed_period,self.max_periods):
 			
@@ -137,7 +137,7 @@ class InterestRate():
 			rate += rate_increase
 			self.rate_array[i] = rate
 			
-		#np.savetxt('/Users/james/development/resources/nz-houses/data/math/interest_rate_array.txt',self.rate_array)
+		np.savetxt('/Users/james/development/resources/nz-houses/data/math/interest_rate_array.txt',self.rate_array)
 		
 	def get_interest_rate_array(self):
 		
@@ -147,6 +147,9 @@ class InterestRate():
 		pyplot.plot(self.rate_array)
 		pyplot.show()
 
+
+
+
 def simulate():
 
 	deposit = 80000.0
@@ -154,7 +157,8 @@ def simulate():
 	price   = price - deposit
 	
 	interest 			= InterestRate()
-	#interest.plot_rate_array()
+	interest.plot_rate_array()
+	exit()
 	interest_rate_array = interest.get_interest_rate_array()
 	
 	rental_income 	= RentalIncome()
@@ -215,10 +219,10 @@ def get_max_interest_rate():
 	
 if __name__ == "__main__":
 	
-	get_max_interest_rate()
+	#get_max_interest_rate()
 	
 	
-	#simulate()
+	simulate()
 	
 	
 	#print str(i) + '\t\t' + str(net_payment_array[i]) #+ str(principal_array[i])

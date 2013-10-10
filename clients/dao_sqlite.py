@@ -29,8 +29,31 @@ def create_table_schools(dbPath):
     conn = sqlite3.connect(dbPath)
     with conn:
         cur = conn.cursor()
-        cur.execute("DROP TABLE IF EXISTS schools")
-        cur.execute("CREATE TABLE schools (id INTEGER, name VARCHAR(255), decile INTEGER)")
+        #cur.execute("DROP TABLE IF EXISTS schools")
+        cur.execute("CREATE TABLE IF NOT EXISTS schools (Id INTEGER, Name VARCHAR(255), Decile INTEGER, UNIQUE(ListingId) ON CONFLICT REPLACE)")
+
+def create_table_residential_listings_individual(dbPath):
+    
+    conn = sqlite3.connect(dbPath)
+    with conn:
+        cur = conn.cursor()
+        #cur.execute("DROP TABLE IF EXISTS residential_listings_individual")
+        cur.execute("CREATE TABLE IF NOT EXISTS residential_individual_listings (ListingId INTEGER, Body VARCHAR(10000), ViewCount INTEGER, UNIQUE(ListingId) ON CONFLICT REPLACE)")
+
+def insert_individual_listing(listing, dbPath):
+    
+    #print json.dumps(listing, sort_keys=True, indent=4)
+    listing_tuple_all = []
+    
+    listing_tuple = (listing[u'ListingId'],listing[u'Body'],listing[u'ViewCount'])
+    
+    listing_tuple_all.append(listing_tuple)
+    
+    conn = sqlite3.connect(dbPath) #conn = sqlite3.connect(":memory:")
+    with conn:
+        cur = conn.cursor()
+        #cur.executemany("INSERT INTO residential_individual_listings VALUES(?,?,?)", listing_tuple_all)
+        cur.execute("INSERT INTO residential_individual_listings VALUES(?,?,?)", listing_tuple)
 
 
 def insert_residential_json(residential_json_pages, dbPath):
