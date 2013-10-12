@@ -1,12 +1,14 @@
-## Data mining the NZ housing market
+## NZ housing market data mining
 
-This project is primarily for data collection and analysis for New Zealand Residential and Rental Listings from the [Trademe](http://trademe.co.nz) API. In addition there are less fully featured clients for other publicly available price, school, geographical, and demographic data including [Koordinates](http://koordinates.com) and [Stats NZ](http://stats.govt.nz).
+This project is for collecting real estate and financial data, building price and investment models, and using this to inform a house purchase. 
 
-Residential and Rental listings are retrieved in JSON form, parsed and inserted into an SQLite database for query or analysis. There are some R scripts for analysis and a comprehensive mortgage simulator with interest rate and capital gain modelling is coming soon.
+Data is collected from [Trademe](http://trademe.co.nz) which captures the majority of the market. Additional data such as school zone, geographical info, and demographic data is collected from [Koordinates](http://koordinates.com) and [Stats NZ](http://stats.govt.nz).
 
-### Other todos
+### Current status
 
-- build price models for inferring unlisted prices
+- Trademe and Koordinates clients and database completed. Stats NZ client nearly ready.
 
-- mail merge on real estate agent's email (heh heh)
+- MC mortgage simulator finished.
+
+- Feature extraction and price modelling in progress.
 
