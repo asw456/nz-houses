@@ -60,16 +60,16 @@ def populate_trademe_listing_table(database_file):
 	#print 'number of hours = ' + str(int(np.ceil(number_of_hours)))
 
 
-	dao_sqlite.create_table_residential_listings_individual('/Users/james/development/resources/nz-houses/db/prod1_listings.db')
+	dao_sqlite.create_table_residential_listings_individual(database_file)
 	
 	k = 0
 	for id in reversed(ids):
 		result = client_trademe.retrieve_individual_listing(id)
 		if 'ListingId' in result:
-			dao_sqlite.insert_individual_listing(result,'/Users/james/development/resources/nz-houses/db/prod1_listings.db')
+			dao_sqlite.insert_individual_listing(result,database_file)
 			#print json.dumps(result, sort_keys=True, indent=4)
 			k += 1
-		if k % 900 == 0:
+		if k % 800 == 0:
 			time.sleep(3600.0 + 60)
 			
 	print 'exit 0'
@@ -90,8 +90,8 @@ if __name__ == '__main__':
 	
 	args = parser.parse_args();
 	
-	#populate_residential_search_table(args.dbFilePath)
-	#populate_rental_search_table(args.dbFilePath)
+	populate_residential_search_table(args.dbFilePath)
+	populate_rental_search_table(args.dbFilePath)
 	populate_trademe_listing_table(args.dbFilePath)
 	
 
