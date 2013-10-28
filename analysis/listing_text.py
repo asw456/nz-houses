@@ -1,24 +1,20 @@
 
 import cPickle
-import pandas.io.sql
-import sqlite3
+import nz_houses_dao as dao
 from nltk.corpus import stopwords
 import re
 import gzip
 
-def read_listing_table1(dbFilePath):
-	conn = sqlite3.connect(dbFilePath)
-	with conn:
-		cur = conn.cursor()
-		cur.execute('SELECT * FROM residential_individual_listings')
-		rows = cur.fetchall()
-		descriptions = {}
-		for row in rows:
-			descriptions[row[0]] = row[1]
-		return descriptions
+class Residential:
+	
+	distionary
+	
+	def 
+	
+	def __init__():
+		pass
 		
-	#with sqlite3.connect(dbFilePath, detect_types=sqlite3.PARSE_DECLTYPES) as conn:
-	#	return pandas.io.sql.frame_query('select * from residential_individual_listings limit 100', conn)
+	
 
 def generate_word_lists(descriptions):
 	descriptions_features = {}
@@ -42,7 +38,6 @@ def generate_word_lists(descriptions):
 
 
 def print_words(a_words):
-	print '-----------'
 	b = ''
 	for word in a_words:
 		b = b + str(word) + ' '
@@ -50,7 +45,7 @@ def print_words(a_words):
 
 if __name__ == '__main__':
 
-	dbFilePath 				= '/Users/james/development/resources/nz-houses/db/prod1.db'
+	dbFilePath 				= '/Users/james/development/code_personal/nz-houses/db/prod1.db'
 	
 	#df_1 = read_listing_table(dbFilePath)
 	#df_1 = df_sqlite[df_sqlite['ListingId'] > 641386568]
@@ -58,19 +53,27 @@ if __name__ == '__main__':
 	#a = df_1[-1:]['Body']
 	#print a.to_string()
 
+
+	query_result = dao.read_listing_table(dbFilePath)
+
 	pickle_flag = 1
 	if pickle_flag == 0:
-		descriptions 			= read_listing_table1(dbFilePath)
+		descriptions = {}
+		for row in query_result:
+			descriptions[row[0]] = row[1]
 		descriptions_features 	= generate_word_lists(descriptions)
-		with gzip.open('/Users/james/development/resources/nz-houses/db/descriptions_features.pkl.gz', 'wb') as f:
+		with gzip.open('/Users/james/development/code_personal/nz-houses/db/descriptions_features.pkl.gz', 'wb') as f:
 			cPickle.dump(descriptions_features, f, protocol=2)
 	if pickle_flag == 1:
-		with gzip.open('/Users/james/development/resources/nz-houses/db/descriptions_features.pkl.gz', 'rb') as f:
+		with gzip.open('/Users/james/development/code_personal/nz-houses/db/descriptions_features.pkl.gz', 'rb') as f:
 			descriptions_features = cPickle.load(f)
+	
 	
 	i = 0
 	for listingId in reversed(descriptions_features.keys()):
+		print listingId
 		print_words(descriptions_features[listingId])
+		print '-----------'
 		i += 1
 		if i == 10:
 			break

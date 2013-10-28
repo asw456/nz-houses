@@ -64,7 +64,7 @@ class CapitalGains():
 	multiplier = 1.0
 	
 	def __init__(self):
-		self.random_walk_probabilities = np.loadtxt('/Users/james/development/resources/nz-houses/data/math/capital_gains_walk_probabilities.txt',dtype=np.float64)
+		self.random_walk_probabilities = np.loadtxt('/Users/james/development/code_personal/nz-houses/data/math/capital_gains_walk_probabilities.txt',dtype=np.float64)
 		self.populate_price_array()	
 	
 	def populate_price_array(self):
@@ -90,7 +90,7 @@ class CapitalGains():
 			price = price + self.multiplier*price_increase
 			self.price_array[i] = price
 			
-		np.savetxt('/Users/james/development/resources/nz-houses/data/math/capital_gains_array.txt',self.price_array)
+		np.savetxt('/Users/james/development/code_personal/nz-houses/data/math/capital_gains_array.txt',self.price_array)
 		
 		print 'maximum price = ' + str(max(self.price_array))
 			
@@ -110,7 +110,7 @@ class InterestRate():
 	rate_array = rate_start*np.ones((max_periods),dtype=np.float64)
 	
 	def __init__(self):
-		self.random_walk_probabilities = np.loadtxt('/Users/james/development/resources/nz-houses/data/math/interest_rate_walk_probabilities.txt',dtype=np.float64)
+		self.random_walk_probabilities = np.loadtxt('/Users/james/development/code_personal/nz-houses/data/math/interest_rate_walk_probabilities.txt',dtype=np.float64)
 		self.populate_rate_array()	
 	
 	def populate_rate_array(self):
@@ -137,7 +137,7 @@ class InterestRate():
 			rate += rate_increase
 			self.rate_array[i] = rate
 			
-		np.savetxt('/Users/james/development/resources/nz-houses/data/math/interest_rate_array.txt',self.rate_array)
+		np.savetxt('/Users/james/development/code_personal/nz-houses/data/math/interest_rate_array.txt',self.rate_array)
 		
 	def get_interest_rate_array(self):
 		
@@ -227,7 +227,7 @@ if __name__ == "__main__":
 	
 	#print str(i) + '\t\t' + str(net_payment_array[i]) #+ str(principal_array[i])
 	
-	#np.savetxt('/Users/james/development/resources/nz-houses/data/math/payment.txt',self.rate_array)
+	#np.savetxt('/Users/james/development/code_personal/nz-houses/data/math/payment.txt',self.rate_array)
 		
 		
 		
