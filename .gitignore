@@ -9,7 +9,6 @@ kdapikeys.txt
 db/
 json/
 data/
-economy/
 superseeded/
 
 *.py[cod]

@@ -10,6 +10,10 @@ import random
 import matplotlib.pyplot as pyplot
 
 
+#p + geom_point() + geom_line(color='lightblue') + ggtitle("Beef: It's What's for Dinner") + xlab("Date") + ylab("Head of Cattle Slaughtered")
+#p = ggplot(mtcars, aes(x='wt', y='mpg', colour='factor(cyl)', size='mpg', linetype='factor(cyl)'))
+#print p + geom_line() + geom_point()
+
 class RentalIncome():
 	
 	def __init__(self):
