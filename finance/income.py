@@ -8,29 +8,29 @@ import random
 
 def rental_income():
 	
-	weekly_rent 		= 400
-	monthly_rent 		= self.weekly_rent*4.34812
+	weekly_rent 		= 350
+	monthly_rent 		= weekly_rent*4.34812
 	return monthly_rent
 	
 
 def flat_income():
 		
-	weekly_flat 		= 100
-	flatmates 			= 1
+	weekly_flat 		= 110
+	flatmates 			= 2
 	unoccupied_weeks 	= 8
-	monthly_flat 		= self.weekly_flat*self.flatmates*4.34812*((52.0-self.unoccupied_weeks)/52)
+	monthly_flat 		= weekly_flat*flatmates*4.34812*((52.0-unoccupied_weeks)/52)
 	return monthly_flat
 
 	
 def salary_income():
 
 	yearly_gross_income = 75000
-	yearly_tax 			= 14000*0.105 + (48000-14000)*0.175 + (70000-48000)*0.30 + (self.yearly_gross_income-70000)*0.33
+	yearly_tax 			= 14000*0.105 + (48000-14000)*0.175 + (70000-48000)*0.30 + (yearly_gross_income-70000)*0.33
 		
-	yearly_income 		= self.yearly_gross_income - self.yearly_tax
-	monthly_income 		= self.yearly_income/12.0
+	yearly_income 		= yearly_gross_income - yearly_tax
+	monthly_income 		= yearly_income/12.0
 		
-	monthly_payment 	= self.monthly_income / 2.0
+	monthly_payment 	= monthly_income / 2.0
 			
 	return monthly_payment
 
